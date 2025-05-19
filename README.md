@@ -1,0 +1,1 @@
+Dashboard-SO é uma aplicação desenvolvida em Python para monitoramento de processos em sistemas operacionais Linux. O projeto tem como objetivo oferecer uma interface simples e intuitiva para visualizar informações sobre o uso de memória, CPU, e processos em tempo real, utilizando recursos nativos do sistema operacional, como o diretório /proc.
