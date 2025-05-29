@@ -1,5 +1,5 @@
 from pathlib import Path
-import time
+#import time
 from .processo import Processo
 
 
@@ -29,23 +29,31 @@ def uso_memoria_percentual():
     return round(100 * (total - disponivel) / total, 2)     # calcula o percentual de uso da memória RAM.
 
 
-def _obter_tempos_cpu(): # retirar!!!!!!!!!!!!!!!!!!!!
-    tempos_cpu = {}
+def _obter_tempos_cpu():
+    tempos_cpu = {} # inicializa um dicionário para armazenar os tempos de CPU 
+
+    # abre o /proc/stat para leitura
     with open('/proc/stat', 'r') as f:
         for linha in f:
+            #verifica se a linha começa com "cpu"
             if linha.startswith('cpu'):
-                partes = linha.split()
+                partes = linha.split()  #divide a linha em uma lista de strings 
                 id_cpu = partes[0]
                 try:
+                    # converte os valores restantes da linha
                     valores = list(map(int, partes[1:]))
+                    # armazena os tempos para a CPU atual no dicionário tempos_cpu
                     tempos_cpu[id_cpu] = {
-                        'total': sum(valores),
-                        'ocioso': valores[3]
+                        'total': sum(valores), # soma dos ticks de CPU, representando o tempo total de trabalho
+                        'ocioso': valores[3] # tempo ocioso, que é o quarto valor na linha 'cpu'
                     }
                 except ValueError:
+                    # ignora linhas onde os valores de tempo da CPU não podem ser convertidos para nums inteiros
                     continue
             else:
-                if not linha.strip():
+                # se a linha não começar com 'cpu', verifica se é uma linha vazia ou não alfabética
+                # para parar a leitura assim que as linhas de 'cpu' terminam
+                if not linha.strip(): # ignora linhas vazias
                     continue
                 if not linha[0].isalpha():
                     break

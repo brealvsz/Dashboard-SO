@@ -1,6 +1,4 @@
 import customtkinter as ctk 
-import threading
-import time 
 from tkinter import ttk # extensão p/ widgets(Treeview)
 
 # aparência global
@@ -10,15 +8,15 @@ ctk.set_default_color_theme("blue")
 CORES_LINHA = ['#00FFFF', '#FF00FF', '#FFFF00', '#00FF00', '#FF4500', '#BA55D3', '#00BFFF', '#ADFF2F']
 FONTE_PRINCIPAL = "Montserrat"
 
-class DashboardApp(ctk.CTk): # herança
-    def __init__(self, num_nucleos_cpu_param): # construtor classe filha, num de nucleos passado do controller
+class Dashboard(ctk.CTk): # herança
+    def __init__(self, num_cpu_cores_param): # construtor classe filha, num de nucleos passado do controller
         super().__init__() # chama construtor classe pai
 
         # título e tamanho da janela
         self.title("Dashboard Brebs e Jutepie") 
         self.geometry("1300x1024")
 
-        self.num_nucleos_cpu = num_nucleos_cpu_param
+        self.num_nucleos_cpu = num_cpu_cores_param
         # caso de erro:
         if self.num_nucleos_cpu is None or self.num_nucleos_cpu <= 0:
             print("AVISO: Número de núcleos da CPU não fornecido ou inválido para a View. Usando 4 como padrão.")
@@ -196,7 +194,7 @@ class DashboardApp(ctk.CTk): # herança
         estilo.map("Treeview.Heading", background=[('active', '#555555')])
 
         # colunas do treeview
-        self.colunas_treeview_processos = ("PID", "Nome", "UID", "% CPU", "Memória (MB)", "Prioridade", "Estado")
+        self.colunas_treeview_processos = ("PID", "Nome", "UID", "% CPU", "Memória (MB)", "Prioridade", "Estado", "Threads")
         # cria o widget treeview
         self.treeview_processos = ttk.Treeview(
             self.frame_principal, # widget pai
@@ -207,7 +205,7 @@ class DashboardApp(ctk.CTk): # herança
 
         # largura padrão e mínima das colunas
         larguras_cols = {"PID": 70, "Nome": 200, "UID": 70, "% CPU": 80,
-                      "Memória (MB)": 120, "Prioridade": 100, "Estado": 110}
+                      "Memória (MB)": 120, "Prioridade": 100, "Estado": 110, "Threads": 80}
         for nome_col in self.colunas_treeview_processos:
             self.treeview_processos.heading(nome_col, text=nome_col, anchor="w") # texto e alinhamento do cabeçalho
             self.treeview_processos.column(nome_col, anchor="w", width=larguras_cols.get(nome_col, 80), minwidth=larguras_cols.get(nome_col, 50)) # alinhamento, largura e largura mínima da coluna
@@ -296,7 +294,8 @@ class DashboardApp(ctk.CTk): # herança
                 f"{proc.get('cpu_percent', 0.0):.1f}", # formata o percentual de CPU
                 f"{proc.get('memory_usage_mb', 0.0):.1f}", # formata o uso de memória
                 proc.get('priority', 'N/A'),
-                proc.get('state', 'N/A')
+                proc.get('state', 'N/A'),
+                proc.get('threads', 'N/A')
             )
             # usa o PID como iid (identificador do item).
             iid_str = str(proc.get('pid', 'N/A'))

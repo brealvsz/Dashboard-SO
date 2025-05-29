@@ -1,6 +1,6 @@
 # main.py
 from controller import Controller
-from view_grafica import DashboardApp 
+from viewGrafica import Dashboard 
 from model import sistema # Precisamos importar sistema aqui para obter o número de núcleos
 
 def main():
@@ -9,9 +9,9 @@ def main():
     # com o número correto de elementos.
     numero_nucleos_cpu = sistema.obter_numero_nucleos_cpu() 
 
-    # Cria a instância da View (DashboardApp), passando o número de núcleos.
+    # Cria a instância da View (Dashboard), passando o número de núcleos.
     # A View não deve mais obter essas informações por conta própria.
-    app_view = DashboardApp(num_cpu_cores_param=numero_nucleos_cpu)
+    app_view = Dashboard(num_cpu_cores_param=numero_nucleos_cpu)
 
     # Cria a instância do Controller, passando a instância da View.
     # O Controller agora tem a referência para a interface gráfica que ele deve atualizar.
